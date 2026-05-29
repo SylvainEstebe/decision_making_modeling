@@ -113,6 +113,29 @@ uv run cc-recovery --ngroups 20
 Outputs land in `results/{demo,worry,experience,parameter_recovery}/` —
 NetCDF traces, JSON diagnostics, and figures.
 
+### Interactive walkthrough
+
+```bash
+uv run --extra dev jupyter lab notebooks/01_walkthrough.ipynb
+```
+
+The notebook loads the data, fits the model in ~1 min, aggregates per nation,
+and reproduces the README figures inline.
+
+### Faster sampling with NumPyro
+
+The default PyMC backend is convenient but not the fastest. For ~5–10× speedup
+on bigger fits, install the optional `fast` extra and switch the NUTS sampler:
+
+```bash
+uv sync --extra fast
+```
+
+```python
+with model:
+    idata = pm.sample(draws=2000, chains=4, nuts_sampler="numpyro")
+```
+
 ### Sampling notes
 
 The faithful JAGS priors (`α ∼ Gamma(0.1, 0.1)`, `ρ, ω ∼ Beta(1, 1)`) are

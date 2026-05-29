@@ -38,6 +38,12 @@ dev = [
     "jupyterlab>=4.2",
     "nbstripout>=0.7",
 ]
+fast = [
+    # Optional NumPyro NUTS backend — 5-10× faster than the default PyMC backend.
+    # Enable per-call with: pm.sample(nuts_sampler="numpyro")
+    "numpyro>=0.15",
+    "jax>=0.4",
+]
 
 [project.scripts]
 cc-fit-demo = "conditional_cooperation.scripts.fit_demo:main"
