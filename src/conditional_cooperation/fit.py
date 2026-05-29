@@ -12,16 +12,18 @@ def sample_posterior(
     model: pm.Model,
     *,
     draws: int = 2000,
-    tune: int = 1000,
+    tune: int = 2000,
     chains: int = 4,
     cores: int | None = None,
-    target_accept: float = 0.95,
+    target_accept: float = 0.99,
+    max_treedepth: int = 13,
     random_seed: int = 1983,
 ) -> az.InferenceData:
     """Run NUTS on a CC model and return an ArviZ ``InferenceData``.
 
-    The defaults mirror the JAGS settings (multiple chains, generous tuning)
-    but use HMC/NUTS instead of Gibbs/Metropolis.
+    Defaults are tuned for the hierarchical model, which has a funnel geometry
+    (subject-level priors centered on group-level means). High ``target_accept``
+    and extra tuning iterations are the standard mitigations.
     """
     with model:
         idata = pm.sample(
@@ -30,6 +32,7 @@ def sample_posterior(
             chains=chains,
             cores=cores,
             target_accept=target_accept,
+            nuts_sampler_kwargs={"max_treedepth": max_treedepth},
             random_seed=random_seed,
             progressbar=True,
             return_inferencedata=True,

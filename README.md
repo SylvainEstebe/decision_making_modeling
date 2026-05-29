@@ -17,8 +17,17 @@ both *perceived* (worry) and *experienced* (harm) — shapes the way people
 > The full original report is in [`docs/full_report.pdf`](docs/full_report.pdf).*
 
 <p align="center">
-  <img src="results/figures/preview_worry.jpeg" width="48%" alt="Worry vs CC parameters" />
-  <img src="results/figures/preview_experience.jpeg" width="48%" alt="Experience vs CC parameters" />
+  <img src="results/figures/worry_vs_cc_params.png" alt="Worry vs CC parameters — α drops from 24 (Copenhagen) to 15 (Athens) as national worry rises (r = −0.49)" />
+  <br>
+  <em>Initial belief about others (α) drops with national worry — r = −0.49.
+  Matching preference (ρ) and belief-update weight (ω) show smaller effects.</em>
+</p>
+
+<p align="center">
+  <img src="results/figures/experience_vs_cc_params.png" alt="Experience vs CC parameters — α unaffected, ρ drops sharply (r = −0.55), ω rises (r = +0.50)" />
+  <br>
+  <em>Lived experience of harm leaves initial beliefs intact (α: r = +0.02) but
+  pushes ρ down (−0.55) and ω up (+0.50) — people react more strongly to peers.</em>
 </p>
 
 ---
@@ -89,14 +98,33 @@ uv sync --extra dev          # creates .venv and installs locked dependencies
 # 3. Sanity-check
 uv run pytest                # 11 tests should pass in < 10 s
 
-# 4. Reproduce the analysis
+# 4a. Fast demo (≈ 1 min): individual model, aggregated per nation
+uv run cc-fit-demo --covariate worry --draws 500 --tune 500 --chains 2
+uv run cc-fit-demo --covariate experience --draws 500 --tune 500 --chains 2
+
+# 4b. Full hierarchical fit (slow, see "Sampling notes" below)
 uv run cc-fit-worry --draws 2000 --chains 4
 uv run cc-fit-experience --draws 2000 --chains 4
+
+# 5. Parameter recovery on synthetic data
 uv run cc-recovery --ngroups 20
 ```
 
-Outputs land in `results/{worry,experience,parameter_recovery}/` —
+Outputs land in `results/{demo,worry,experience,parameter_recovery}/` —
 NetCDF traces, JSON diagnostics, and figures.
+
+### Sampling notes
+
+The faithful JAGS priors (`α ∼ Gamma(0.1, 0.1)`, `ρ, ω ∼ Beta(1, 1)`) are
+heavy-tailed by design — JAGS' Gibbs sampler handles them fine, but NUTS hits
+funnels and divergences. The Python port therefore defaults to weakly
+informative NUTS-friendly priors (`α ∼ Gamma(2, 0.1)`, `ρ, ω ∼ Beta(2, 2)`).
+The original JAGS priors remain reachable via
+`build_individual_model(..., jags_faithful_priors=True)`.
+
+The full hierarchical model (`build_hierarchical_model`) still exhibits funnel
+geometry on its national-level scale parameters; a non-centered
+reparameterisation is the natural next step and a good follow-up exercise.
 
 ## Key results
 

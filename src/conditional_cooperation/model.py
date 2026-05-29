@@ -34,6 +34,8 @@ def build_individual_model(
     c_obs: np.ndarray,
     Ga: np.ndarray,
     coords: dict[str, list] | None = None,
+    *,
+    jags_faithful_priors: bool = False,
 ) -> pm.Model:
     """Build the basic Conditional Cooperation model (no national covariate).
 
@@ -45,6 +47,13 @@ def build_individual_model(
     Ga
         Group-averaged contribution excluding self (input to the belief update),
         shape ``(groupSize, ntrials, ngroups)``.
+    jags_faithful_priors
+        If True, use the exact priors from the original JAGS code
+        (``alpha ~ Gamma(0.1, 0.1)``, ``rho/omega ~ Beta(1, 1)``). These have
+        very wide tails, which Gibbs (JAGS) handles fine but causes divergences
+        and funnels in NUTS. Default is False, which uses NUTS-friendly priors
+        (``alpha ~ Gamma(2, 0.1)`` — mean 20, peak around the centre of the
+        token range; ``rho/omega ~ Beta(2, 2)`` — weakly informative).
 
     Returns
     -------
@@ -63,11 +72,17 @@ def build_individual_model(
         **coords,
     }
 
+    if jags_faithful_priors:
+        alpha_hyperprior = {"alpha": 0.1, "beta": 0.1}
+        beta_hyperprior = {"alpha": 1.0, "beta": 1.0}
+    else:
+        alpha_hyperprior = {"alpha": 2.0, "beta": 0.1}  # mean 20, peak at centre of [0, 20]
+        beta_hyperprior = {"alpha": 2.0, "beta": 2.0}   # weakly informative, peak at 0.5
+
     with pm.Model(coords=coords) as model:
-        # Subject × group level priors (matches JAGS CC_individual.txt)
-        alpha = pm.Gamma("alpha", alpha=0.1, beta=0.1, dims=("subject", "group"))
-        rho = pm.Beta("rho", alpha=1.0, beta=1.0, dims=("subject", "group"))
-        omega = pm.Beta("omega", alpha=1.0, beta=1.0, dims=("subject", "group"))
+        alpha = pm.Gamma("alpha", **alpha_hyperprior, dims=("subject", "group"))
+        rho = pm.Beta("rho", **beta_hyperprior, dims=("subject", "group"))
+        omega = pm.Beta("omega", **beta_hyperprior, dims=("subject", "group"))
 
         Gb_t1 = alpha  # see "Design notes" in the module docstring
         Ga_t = pt.as_tensor_variable(Ga)  # shape (subject, trial, group)

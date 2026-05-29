@@ -1,0 +1,8 @@
+{
+  "max_rhat": 1.05,
+  "min_ess_bulk": 40.0,
+  "min_ess_tail": 33.0,
+  "divergences": 0,
+  "passes_rhat": false,
+  "passes_ess": false
+}
