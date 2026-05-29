@@ -43,8 +43,8 @@ cc-fit-experience = "conditional_cooperation.scripts.fit_experience:main"
 cc-recovery = "conditional_cooperation.scripts.run_recovery:main"
 
 [project.urls]
-Repository = "https://github.com/SylvainEstebe/decision_making_project"
-Issues = "https://github.com/SylvainEstebe/decision_making_project/issues"
+Repository = "https://github.com/SylvainEstebe/decision_making_modeling"
+Issues = "https://github.com/SylvainEstebe/decision_making_modeling/issues"
 
 [build-system]
 requires = ["hatchling"]
