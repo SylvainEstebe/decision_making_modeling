@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "Conditional Cooperation under National Insecurity"
+message: "If you use this code, please cite it as below."
+type: software
+authors:
+  - given-names: Sylvain
+    family-names: Estebe
+    email: sylvain.estebe@gmail.com
+    affiliation: "Aarhus University — Cognitive Science"
+repository-code: "https://github.com/SylvainEstebe/decision_making_project"
+license: MIT
+version: "0.1.0"
+date-released: "2024-01-08"
+keywords:
+  - bayesian
+  - pymc
+  - public-goods-game
+  - conditional-cooperation
+  - cognitive-science
+references:
+  - type: article
+    authors:
+      - family-names: Herrmann
+        given-names: Benedikt
+      - family-names: Thöni
+        given-names: Christian
+      - family-names: Gächter
+        given-names: Simon
+    title: "Antisocial Punishment Across Societies"
+    journal: Science
+    volume: "319"
+    issue: "5868"
+    year: 2008
+    pages: "1362-1367"
+    doi: "10.1126/science.1153808"

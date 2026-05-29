@@ -1,0 +1,56 @@
+# ─── Python ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ─── uv / virtualenv ─────────────────────────────────────────────────────
+.venv/
+venv/
+.env
+.env.local
+
+# ─── PyMC / ArviZ artifacts ──────────────────────────────────────────────
+*.netcdf
+*.nc
+*.h5
+mcmc_traces/
+
+# ─── R (legacy) ──────────────────────────────────────────────────────────
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# ─── Jupyter ─────────────────────────────────────────────────────────────
+*.ipynb_checkpoints
+
+# ─── OS / Editor ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ─── Apple Numbers / Office leftovers ────────────────────────────────────
+*.numbers
+~$*
+
+# ─── Results that should be regenerated, not committed ───────────────────
+# (keep results/figures/ for the portfolio; ignore raw MCMC dumps)
+results/traces/
+results/*.pkl
